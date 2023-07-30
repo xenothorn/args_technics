@@ -22,35 +22,7 @@ TokenForwardIt FindSentenceEnd(TokenForwardIt tokens_begin, TokenForwardIt token
           });
     return before_sentence_end == tokens_end ? tokens_end : next(before_sentence_end);
 }
-/*
-// Класс Token имеет метод bool IsEndSentencePunctuation() const
-template <typename Token>
-vector<Sentence<Token>> SplitIntoSentences(vector<Token> tokens) {
-    // Напишите реализацию функции, не копируя объекты типа Token
-    vector<Sentence<Token>> a;
-    vector<Token> tv;
-    bool end_of_sentence = false;
-    for (const auto& t: tokens)
-    {
-        if (t.IsEndSentencePunctuation()) 
-        {
-            if (!end_of_sentence) end_of_sentence = true;
-            tv.push_back(move(t));
-        }
-        else
-        {
-            if (end_of_sentence)
-            {
-                end_of_sentence = false;
-                a.push_back(move(tv));
-                tv.clear();            
-            }
-            tv.push_back(move(t));  
-        }
-    }
-    a.push_back(move(tv));
-    return a;
-}*/
+
 // Класс Token имеет метод bool IsEndSentencePunctuation() const
 template <typename Token>
 vector<Sentence<Token>> SplitIntoSentences(vector<Token>&& tokens) {
@@ -58,12 +30,12 @@ vector<Sentence<Token>> SplitIntoSentences(vector<Token>&& tokens) {
     vector<Sentence<Token>> a;
     vector<Token> tv;
     bool end_of_sentence = false;
-    for (auto it = tokens.begin(); it != tokens.end(); ++it)
+    for (auto it = make_move_iterator(tokens.begin()); it != make_move_iterator(tokens.end()); ++it)
     {
         if ((*it).IsEndSentencePunctuation()) 
         {
             if (!end_of_sentence) end_of_sentence = true;
-            tv.push_back(move(*it));
+            tv.push_back(*it);
         }
         else
         {
@@ -73,7 +45,7 @@ vector<Sentence<Token>> SplitIntoSentences(vector<Token>&& tokens) {
                 a.push_back(move(tv));
                 tv.clear();            
             }
-            tv.push_back(move(*it));  
+            tv.push_back(*it);  
         }
     }
     a.push_back(move(tv));
